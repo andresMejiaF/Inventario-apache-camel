@@ -7,8 +7,8 @@ For further reference, please consider the following sections:
 * [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.6.10-SNAPSHOT/gradle-plugin/reference/html/)
 * [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.6.10-SNAPSHOT/gradle-plugin/reference/html/#build-image)
 * [Spring Web](https://docs.spring.io/spring-boot/docs/2.6.10-SNAPSHOT/reference/htmlsingle/#web)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.6.10-SNAPSHOT/reference/htmlsingle/#data.sql.jpa-and-spring-data)
 * [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/2.6.10-SNAPSHOT/reference/htmlsingle/#using.devtools)
+* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.6.10-SNAPSHOT/reference/htmlsingle/#data.sql.jpa-and-spring-data)
 
 ### Guides
 The following guides illustrate how to use some features concretely:

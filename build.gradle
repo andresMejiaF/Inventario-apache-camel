@@ -1,10 +1,11 @@
 plugins {
-	id 'org.springframework.boot' version '2.6.10-SNAPSHOT'
+	id 'org.springframework.boot' version '2.6.9'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id "io.freefair.lombok" version "6.2.0"
 	id 'java'
 }
 
-group = 'com.example'
+group = 'com.training'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
@@ -16,17 +17,22 @@ configurations {
 
 repositories {
 	mavenCentral()
-	maven { url 'https://repo.spring.io/milestone' }
-	maven { url 'https://repo.spring.io/snapshot' }
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.apache.camel.springboot:camel-spring-boot-starter:3.17.0'
-	compileOnly 'org.projectlombok:lombok'
+
+	implementation (
+			platform('org.apache.camel:camel-bom:3.0.0'),
+			'org.springframework.boot:spring-boot-starter-data-jpa',
+			platform('org.apache.camel.springboot:camel-spring-boot-dependencies:3.0.0'),
+			'org.apache.camel.springboot:camel-spring-boot-starter:3.0.0',
+			'org.apache.camel.springboot:camel-file-starter',
+			'org.apache.camel:camel-servlet-starter:3.0.0-RC3',
+			'org.springframework.boot:spring-boot-starter-web',
+			'org.apache.camel:camel-jackson:3.0.0-RC3'
+	)
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	annotationProcessor 'org.projectlombok:lombok'
+	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
