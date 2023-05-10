@@ -1,8 +1,11 @@
 package com.example.demo.resource;
 
+import com.example.demo.dto.Producto;
 import com.example.demo.dto.Prueba;
 import com.example.demo.dto.WeatherDto;
 import com.example.demo.processor.*;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.rest.RestBindingMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +34,12 @@ public class RestDsl extends RouteBuilder {
 
     @Autowired
     private PruebaProcessor pruebaProcessor;
+
+    @Autowired
+    private ProductoProcessor productoProcessor;
+
+
+
 
     @Override
     public void configure() throws Exception {
@@ -62,6 +71,21 @@ public class RestDsl extends RouteBuilder {
         from("direct:agregar-prueba")
                 .log("LLega mani")
                 .process(pruebaProcessor);
+
+        rest()
+                .post("/inventario/productos/")
+                .consumes(MediaType.APPLICATION_JSON_VALUE)
+                .type(Producto.class)
+                .to("direct:agregar-producto");
+
+        from("direct:agregar-producto")
+                .process(new Processor() {
+                    @Override
+                    public void process(Exchange exchange) throws Exception {
+                        exchange.setProperty("accion", "agregar");
+                    }
+                })
+                .process(productoProcessor);
 
         from("direct:get-weather-data")
                 .process(getWeatherProcessor);
