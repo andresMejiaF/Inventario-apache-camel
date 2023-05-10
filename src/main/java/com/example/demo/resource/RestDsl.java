@@ -1,5 +1,6 @@
 package com.example.demo.resource;
 
+import com.example.demo.dto.Prueba;
 import com.example.demo.dto.WeatherDto;
 import com.example.demo.processor.*;
 import org.apache.camel.builder.RouteBuilder;
@@ -28,6 +29,9 @@ public class RestDsl extends RouteBuilder {
     @Autowired
     private UpdateWeatherProcessor updateWeatherProcessor;
 
+    @Autowired
+    private PruebaProcessor pruebaProcessor;
+
     @Override
     public void configure() throws Exception {
         restConfiguration().component("servlet").bindingMode(RestBindingMode.auto);
@@ -48,6 +52,16 @@ public class RestDsl extends RouteBuilder {
                 .consumes(MediaType.APPLICATION_JSON_VALUE)
                 .type(WeatherDto.class)
                 .to("direct:update-weather-data");
+
+        rest()
+                .post("/prueba")
+                .consumes(MediaType.APPLICATION_JSON_VALUE)
+                .type(Prueba.class)
+                .to("direct:agregar-prueba");
+
+        from("direct:agregar-prueba")
+                .log("LLega mani")
+                .process(pruebaProcessor);
 
         from("direct:get-weather-data")
                 .process(getWeatherProcessor);
