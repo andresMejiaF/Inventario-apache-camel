@@ -18,23 +18,22 @@ public class Producto {
 
     @Id
     @SerializedName("id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
 
-    @NonNull
+
     @SerializedName("nombre")
     private String nombre;
 
 
-    @NonNull
     @SerializedName("descripcion")
     private String descripcion;
 
-    @NonNull
     @SerializedName("precio")
     private float precio;
 
-    @NonNull
+
     @SerializedName("cantidad")
     private int cantidad;
 

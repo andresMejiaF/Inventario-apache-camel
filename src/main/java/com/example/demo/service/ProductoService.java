@@ -7,6 +7,9 @@ import com.example.demo.dto.Prueba;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ProductoService {
 
@@ -15,5 +18,42 @@ public class ProductoService {
 
     public void guardarProducto(Producto dto) {
         repository.save(dto);
+    }
+
+    public void actualizarProducto(Producto dto, Integer id){
+
+        Optional<Producto> productoOptional = repository.findById(id);
+        System.out.println("productoOptiona = " + productoOptional);
+
+        if(productoOptional.isPresent()){
+            Producto producto = productoOptional.get();
+            producto.setCantidad(dto.getCantidad());
+            producto.setPrecio(dto.getPrecio());
+            producto.setNombre(dto.getNombre());
+            producto.setDescripcion(dto.getDescripcion());
+            repository.save(producto);
+        }else{
+            System.out.println("El id especificado no existe");
+        }
+    }
+    public void eliminarProducto(Integer id){
+        repository.deleteById(id);
+    }
+
+    public Producto consultarProducto(Integer id){
+        Optional<Producto> productoOptional = repository.findById(id);
+
+        if(productoOptional.isPresent()){
+            Producto producto= productoOptional.get();
+            return producto;
+        }
+        return null;
+    }
+
+    public List<Producto> consultarProductos(){
+
+        List<Producto> productos = repository.findAll();
+
+        return productos;
     }
 }
