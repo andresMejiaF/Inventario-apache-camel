@@ -20,7 +20,7 @@ public class ProductoService {
         repository.save(dto);
     }
 
-    public void actualizarProducto(Producto dto, Integer id){
+    public Producto actualizarProducto(Producto dto, Integer id){
 
         Optional<Producto> productoOptional = repository.findById(id);
         System.out.println("productoOptiona = " + productoOptional);
@@ -31,13 +31,22 @@ public class ProductoService {
             producto.setPrecio(dto.getPrecio());
             producto.setNombre(dto.getNombre());
             producto.setDescripcion(dto.getDescripcion());
-            repository.save(producto);
+          return  repository.save(producto);
         }else{
             System.out.println("El id especificado no existe");
+            return null;
         }
     }
-    public void eliminarProducto(Integer id){
-        repository.deleteById(id);
+    public Producto eliminarProducto(Integer id){
+        Optional<Producto> productoOptional = repository.findById(id);
+        if(productoOptional.isPresent()){
+            Producto producto = productoOptional.get();
+            repository.deleteById(id);
+            return producto;
+        }else{
+            return null;
+        }
+
     }
 
     public Producto consultarProducto(Integer id){
@@ -46,8 +55,9 @@ public class ProductoService {
         if(productoOptional.isPresent()){
             Producto producto= productoOptional.get();
             return producto;
+        }else{
+            return null;
         }
-        return null;
     }
 
     public List<Producto> consultarProductos(){

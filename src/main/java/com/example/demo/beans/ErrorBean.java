@@ -50,7 +50,7 @@ public class ErrorBean {
      */
     public static void createBadRequestException(Exchange exchange) {
         Integer httpCode = 400;
-        Producto producto = exchange.getProperty("producto", Producto.class);
+        Producto producto = exchange.getMessage().getBody(Producto.class);
 
         ExceptionClass exception = new ExceptionClass();
         exception.setCode(400);
@@ -71,17 +71,54 @@ public class ErrorBean {
         }
 
         exception.setErrors(errors);
-/*
-        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, httpCode);
-        exchange.getIn().setBody(exception);
 
-        Integer response = exchange.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE, Integer.class);
-        System.out.println("response = " + response);
-
- */
         exchange.getOut().setHeader(Exchange.HTTP_RESPONSE_CODE, httpCode);
         exchange.getOut().setBody(exception);
-       // exchange.getIn().setBody(exception);
+
+        Integer response = exchange.getOut().getHeader(Exchange.HTTP_RESPONSE_CODE, Integer.class);
+        System.out.println("response = " + response);
+    }
+
+    public static void createBadRequestExceptionProductNoexist(Exchange exchange) {
+        Integer httpCode = 400;
+
+        ExceptionClass exception = new ExceptionClass();
+        exception.setCode(400);
+        exception.setSuccessful(false);
+        List<Error> errors = new ArrayList<>();
+
+        Error error = new Error();
+        error.setCode(404);
+        error.setDescription("El producto con el ID especificado no existe.");
+        errors.add(error);
+
+
+        exception.setErrors(errors);
+
+        exchange.getOut().setHeader(Exchange.HTTP_RESPONSE_CODE, httpCode);
+        exchange.getOut().setBody(exception);
+
+        Integer response = exchange.getOut().getHeader(Exchange.HTTP_RESPONSE_CODE, Integer.class);
+        System.out.println("response = " + response);
+    }
+
+    public static void createInternalErrorException(Exchange exchange) {
+        Integer httpCode = 500;
+        System.out.println("LLEGA");
+        ExceptionClass exception = new ExceptionClass();
+        exception.setCode(httpCode);
+        exception.setSuccessful(false);
+        List<Error> errors = new ArrayList<>();
+
+            Error error = new Error();
+            error.setCode(503);
+            error.setDescription("Error interno del servidor. Por favor, intentalo de nuevo mas tarde");
+            errors.add(error);
+
+        exception.setErrors(errors);
+
+        exchange.getOut().setHeader(Exchange.HTTP_RESPONSE_CODE, httpCode);
+        exchange.getOut().setBody(exception);
 
         Integer response = exchange.getOut().getHeader(Exchange.HTTP_RESPONSE_CODE, Integer.class);
         System.out.println("response = " + response);

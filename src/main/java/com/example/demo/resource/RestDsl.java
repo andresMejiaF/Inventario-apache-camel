@@ -5,8 +5,11 @@ import com.example.demo.dto.Producto;
 import com.example.demo.dto.Prueba;
 import com.example.demo.dto.WeatherDto;
 import com.example.demo.dto.out.ExceptionClass;
+import com.example.demo.exceptions.BadRequestException;
+import com.example.demo.exceptions.BadRequestExceptionId;
 import com.example.demo.exceptions.ExceptionCampos;
 import com.example.demo.processor.*;
+import org.apache.camel.CamelExecutionException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
@@ -47,6 +50,29 @@ public class RestDsl extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
+
+
+        onException(BadRequestException.class)
+                .log("se produjo una excepcion en el procesamiento: ${exception.message}")
+                .handled(true)
+                .bean(errorBean, "createBadRequestException(*)").id("errorBeanException")
+                .marshal().json(JsonLibrary.Jackson)
+                .end();
+
+
+
+
+        onException(BadRequestExceptionId.class)
+                .handled(true)
+                .bean(errorBean, "createBadRequestExceptionProductNoexist(*)").id("errorBeanException")
+                .marshal().json(JsonLibrary.Jackson)
+                .end();
+
+        onException(RuntimeException.class)
+                .handled(true)
+                .bean(errorBean, "createInternalErrorException(*)").id("errorBeanException")
+                .marshal().json(JsonLibrary.Jackson)
+                .end();
 
         restConfiguration().component("servlet").bindingMode(RestBindingMode.auto);
 
@@ -151,22 +177,16 @@ public class RestDsl extends RouteBuilder {
 
         from("direct:agregar-producto")
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(200))
-                .onException(RuntimeException.class)
-                    .log("se produjo una excepcion en el procesamiento: ${exception.message}")
-                    .handled(true)
-                .bean(errorBean, "createBadRequestException(*)").id("errorBeanException")
-                .marshal().json(JsonLibrary.Jackson)
-                .end()
+
                 .process(new Processor() {
                     @Override
                     public void process(Exchange exchange)  {
+
                         exchange.setProperty("accion", "agregar");
-                        Producto producto = exchange.getMessage().getBody(Producto.class);
-                       exchange.setProperty("producto", producto);
-                       System.out.println("producto.toString() = " + producto.toString());
-                        if(producto.getNombre().isEmpty() || producto.getPrecio()<0) {
-                            throw new RuntimeException("error en procesamiento");
-                        }
+
+
+                     //   throw new RuntimeException("Error interno del servidor");
+
                     }
                 })
                 .process(productoProcessor);

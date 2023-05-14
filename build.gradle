@@ -32,7 +32,9 @@ dependencies {
 			'org.apache.camel:camel-jackson:3.0.0-RC3' ,
 			'mysql:mysql-connector-java',
 			'org.hibernate:hibernate-core:5.5.7.Final',
-			'com.google.code.gson:gson:2.8.9'
+			'com.google.code.gson:gson:2.8.9',
+			'javax.ws.rs:javax.ws.rs-api:2.1.1'
+
 
 
 	)
